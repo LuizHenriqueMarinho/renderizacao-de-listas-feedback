@@ -8,27 +8,43 @@ import {
   AddTaskButton,
   RemoveButton,
   LinhaHorizontal
-} from "./styled";
+} from "./ListaFeita/styled";
 import bin from "../../assets/bin.png";
+import { ListaFeita } from "./ListaFeita/ListaFeita";
 
-export function ListaTarefas() {
-  const [lista, setLista] = useState(["Fazer exercícios", "Estudar React"]);
-  const [novaTarefa, setNovaTarefa] = useState("");
 
-  const onChangeTarefa = (event) => {
-    setNovaTarefa(event.target.value);
-  };
+  export function ListaTarefas() {
+    
+    const [lista, setLista] = useState(["Fazer exercícios", "Estudar React"]);
+    const [novaTarefa, setNovaTarefa] = useState("");
+    const [listaFeita, setListaFeita] = useState([]);
+  
+    const onChangeTarefa = (event) => {
+      setNovaTarefa(event.target.value);
+    };
+  
+    const adicionaTarefa = () => {
+      const novaLista = [...lista, novaTarefa];
+      setLista(novaLista);
+      setNovaTarefa("");
+    };
+    const removeTarefa = (tarefa) => {
+      const itemFeito = lista.filter((item) => item === tarefa);
+      const listaFiltrada = lista.filter((item) => item !== tarefa);
+      setLista(listaFiltrada);
+      setListaFeita([...listaFeita, itemFeito])
+      console.log(listaFeita)
+      //return funcaoListaFeita
+    };
 
-  const adicionaTarefa = () => {
-    const novaLista = [...lista, novaTarefa];
-    setLista(novaLista);
-    setNovaTarefa("");
-  };
-
-  const removeTarefa = (tarefa) => {
-    const listaFiltrada = lista.filter((item) => item !== tarefa);
-    setLista(listaFiltrada);
-  };
+    
+    function digitou(e) 
+    {
+      if (e.keyCode == 13) {
+        // AO PRESSIONAR A TECLA "ENTER"
+        return adicionaTarefa() //Atençaõ! A sintaxe deve ser essa
+      }
+    }
 
   return (
     <ListaTarefasContainer>
@@ -37,6 +53,7 @@ export function ListaTarefas() {
           placeholder="Digite aqui uma tarefa"
           value={novaTarefa}
           onChange={onChangeTarefa}
+          onKeyDown={digitou}
         />
         <AddTaskButton onClick={adicionaTarefa}>Adicionar</AddTaskButton>
       </InputContainer>
@@ -55,6 +72,11 @@ export function ListaTarefas() {
         </ul>
       </ListaContainer>
       <LinhaHorizontal/>
+      <ListaFeita
+     listaFeita={listaFeita}
+     setListaFeita={setListaFeita}
+     />
     </ListaTarefasContainer>
+    
   );
 }
